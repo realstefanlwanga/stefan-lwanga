@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lwanga Stefan Gobero — Mechatronics & Robotics Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0A0E17;
+  --ink-mid: #111827;
+  --steel: #1C2A3A;
+  --electric: #00D4FF;
+  --electric-dim: #0097B8;
+  --amber: #F59E0B;
+  --slate: #94A3B8;
+  --light: #E2E8F0;
+  --white: #FFFFFF;
+  --display: 'Syne', sans-serif;
+  --body: 'Inter', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--light);
+  font-family: var(--body);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── LOADER ── */
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 1.5rem;
+  transition: opacity 0.6s var(--ease), visibility 0.6s;
+}
+#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-name {
+  font-family: var(--display);
+  font-size: 1.6rem; font-weight: 800;
+  color: var(--white); letter-spacing: -0.03em;
+}
+.loader-name span { color: var(--electric); }
+.loader-bar-wrap {
+  width: 200px; height: 2px;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+.loader-bar {
+  height: 100%; width: 0;
+  background: linear-gradient(90deg, var(--electric), var(--amber));
+  animation: loadProgress 1.4s var(--ease) forwards;
+}
+@keyframes loadProgress { to { width: 100%; } }
+
+/* ── CURSOR DOT ── */
+.cursor {
+  position: fixed; width: 8px; height: 8px;
+  background: var(--electric); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.3s, height 0.3s, opacity 0.3s;
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed; width: 36px; height: 36px;
+  border: 1px solid rgba(0,212,255,0.4); border-radius: 50%;
+  pointer-events: none; z-index: 9997;
+  transform: translate(-50%, -50%);
+  transition: transform 0.18s var(--ease), width 0.3s, height 0.3s;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  padding: 1.2rem 3rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(10,14,23,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0,212,255,0.08);
+  transition: background 0.3s;
+}
+.nav-logo {
+  font-family: var(--display); font-weight: 800; font-size: 1rem;
+  color: var(--white); letter-spacing: -0.02em;
+  text-decoration: none;
+}
+.nav-logo span { color: var(--electric); }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--slate); text-decoration: none;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0;
+  width: 0; height: 1px; background: var(--electric);
+  transition: width 0.3s var(--ease);
+}
+.nav-links a:hover { color: var(--electric); }
+.nav-links a:hover::after { width: 100%; }
+.nav-cta {
+  font-family: var(--mono); font-size: 0.72rem;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid var(--electric); color: var(--electric);
+  text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-cta:hover { background: var(--electric); color: var(--ink); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 4rem;
+  align-items: center;
+  padding: 10rem 3rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+}
+
+.hero-glow {
+  position: absolute; top: 20%; right: 15%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  animation: glowPulse 4s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+.hero-content { position: relative; z-index: 1; }
+
+.hero-status {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  font-family: var(--mono); font-size: 0.7rem;
+  color: var(--slate); letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 2rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(0,212,255,0.15);
+  background: rgba(0,212,255,0.04);
+}
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #22C55E;
+  animation: pulse-green 2s ease-in-out infinite;
+}
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(34,197,94,0); }
+}
+
+.hero-name {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(3rem, 6.5vw, 5.5rem);
+  line-height: 0.95; letter-spacing: -0.04em;
+  color: var(--white); margin-bottom: 1.2rem;
+  opacity: 0; transform: translateY(30px);
+  animation: fadeUp 0.8s 1.6s var(--ease) forwards;
+}
+.hero-name .accent { color: var(--electric); }
+
+.hero-role {
+  font-family: var(--display); font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 500; color: var(--slate);
+  margin-bottom: 2rem;
+  opacity: 0; transform: translateY(20px);
+  animation: fadeUp 0.8s 1.8s var(--ease) forwards;
+}
+.hero-role .highlight { color: var(--amber); font-weight: 600; }
+
+.hero-typewriter-line {
+  font-family: var(--mono); font-size: 0.95rem;
+  color: var(--electric); margin-bottom: 2rem;
+  min-height: 1.5rem;
+  opacity: 0; animation: fadeUp 0.8s 2s var(--ease) forwards;
+}
+.tw-cursor {
+  display: inline-block; width: 2px; height: 1em;
+  background: var(--electric); margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.7s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.hero-desc {
+  color: var(--slate); font-size: 0.97rem; line-height: 1.85;
+  max-width: 500px; margin-bottom: 3rem;
+  opacity: 0; animation: fadeUp 0.8s 2.1s var(--ease) forwards;
+}
+
+.hero-buttons {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp 0.8s 2.3s var(--ease) forwards;
+}
+.btn-electric {
+  font-family: var(--display); font-weight: 600; font-size: 0.88rem;
+  padding: 0.9rem 2rem; background: var(--electric); color: var(--ink);
+  border: none; text-decoration: none; display: inline-flex;
+  align-items: center; gap: 0.5rem; letter-spacing: -0.01em;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+.btn-electric:hover {
+  background: #33DDFF; transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,212,255,0.3);
+}
+.btn-ghost {
+  font-family: var(--display); font-weight: 500; font-size: 0.88rem;
+  padding: 0.9rem 2rem; background: transparent; color: var(--light);
+  border: 1px solid rgba(226,232,240,0.2); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+.btn-ghost:hover { border-color: var(--electric); color: var(--electric); transform: translateY(-2px); }
+
+/* ── HERO PHOTO ── */
+.hero-photo-wrap {
+  position: relative; z-index: 1;
+  opacity: 0; transform: translateX(30px);
+  animation: fadeLeft 0.9s 1.9s var(--ease) forwards;
+}
+.hero-photo-frame {
+  position: relative; width: 100%; max-width: 380px;
+  margin: 0 auto;
+}
+.hero-photo-frame::before {
+  content: '';
+  position: absolute; inset: -2px;
+  background: linear-gradient(135deg, var(--electric), transparent 50%, var(--amber));
+  z-index: -1;
+}
+.hero-photo-frame::after {
+  content: '';
+  position: absolute; top: 16px; left: 16px; right: -16px; bottom: -16px;
+  border: 1px solid rgba(0,212,255,0.2); z-index: -2;
+}
+.hero-photo-frame img {
+  width: 100%; display: block;
+  filter: grayscale(10%) contrast(1.05);
+  transition: filter 0.4s;
+}
+.hero-photo-frame:hover img { filter: grayscale(0%) contrast(1.1); }
+.photo-badge {
+  position: absolute; bottom: -1.5rem; right: -1.5rem;
+  background: var(--electric); color: var(--ink);
+  font-family: var(--mono); font-size: 0.65rem; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.7rem 1rem;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+}
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeLeft { to { opacity: 1; transform: translateX(0); } }
+
+/* ── SECTION SCAFFOLDING ── */
+.section-wrap {
+  padding: 7rem 3rem;
+  max-width: 1160px; margin: 0 auto;
+}
+.section-wrap.full { max-width: 100%; }
+
+.section-eyebrow {
+  font-family: var(--mono); font-size: 0.68rem;
+  color: var(--electric); letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 0.8rem;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.section-eyebrow::before {
+  content: ''; display: inline-block;
+  width: 30px; height: 1px; background: var(--electric);
+}
+.section-heading {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: -0.04em; color: var(--white);
+  line-height: 1.05; margin-bottom: 4rem;
+}
+
+/* ── ABOUT BAND ── */
+#about { background: var(--ink-mid); }
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 6rem; align-items: start;
+}
+.about-text p { color: var(--slate); margin-bottom: 1.3rem; font-size: 0.97rem; line-height: 1.9; }
+.about-text p strong { color: var(--light); font-weight: 500; }
+.about-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; }
+.chip {
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.06em;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid rgba(0,212,255,0.25);
+  color: var(--electric); background: rgba(0,212,255,0.05);
+}
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.kpi {
+  padding: 2rem; border: 1px solid rgba(226,232,240,0.06);
+  background: var(--ink);
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s;
+}
+.kpi:hover { border-color: rgba(0,212,255,0.2); }
+.kpi::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, var(--electric), transparent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+.kpi:hover::before { transform: scaleX(1); }
+.kpi-val {
+  font-family: var(--display); font-size: 2.4rem; font-weight: 800;
+  color: var(--white); line-height: 1; margin-bottom: 0.4rem;
+}
+.kpi-val span { color: var(--electric); }
+.kpi-label { font-family: var(--mono); font-size: 0.65rem; color: var(--slate); letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ── SKILLS ── */
+.skills-bento {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+.skill-tile {
+  background: var(--ink-mid); border: 1px solid rgba(226,232,240,0.06);
+  padding: 2rem;
+  transition: border-color 0.3s, transform 0.3s var(--ease);
+  position: relative; overflow: hidden;
+}
+.skill-tile:hover { border-color: rgba(0,212,255,0.2); transform: translateY(-4px); }
+.skill-tile.wide { grid-column: span 2; }
+.skill-tile-icon { font-size: 1.8rem; margin-bottom: 1.2rem; }
+.skill-tile-title {
+  font-family: var(--display); font-weight: 700; font-size: 1rem;
+  color: var(--white); margin-bottom: 0.5rem;
+}
+.skill-tile-desc { font-size: 0.85rem; color: var(--slate); line-height: 1.7; }
+.skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+.stag {
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.04em;
+  padding: 0.22rem 0.6rem;
+  background: rgba(0,212,255,0.07); color: var(--electric);
+  border: 1px solid rgba(0,212,255,0.15);
+}
+.skill-tile-corner {
+  position: absolute; top: 0; right: 0;
+  width: 40px; height: 40px;
+  background: linear-gradient(225deg, rgba(0,212,255,0.12), transparent);
+}
+
+/* ── PROJECTS ── */
+#projects { background: var(--ink-mid); }
+.projects-list { display: flex; flex-direction: column; gap: 1.5rem; }
+.proj-card {
+  display: grid; grid-template-columns: 60px 1fr auto;
+  gap: 2rem; align-items: center;
+  padding: 2.2rem 2.5rem;
+  background: var(--ink);
+  border: 1px solid rgba(226,232,240,0.05);
+  transition: border-color 0.3s, background 0.3s;
+  position: relative; overflow: hidden;
+}
+.proj-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: linear-gradient(to bottom, var(--electric), var(--amber));
+  transform: scaleY(0); transform-origin: bottom;
+  transition: transform 0.4s var(--ease);
+}
+.proj-card:hover::before { transform: scaleY(1); }
+.proj-card:hover { border-color: rgba(0,212,255,0.15); background: rgba(0,212,255,0.02); }
+.proj-card.star { background: rgba(0,212,255,0.03); border-color: rgba(0,212,255,0.12); }
+.proj-num {
+  font-family: var(--mono); font-size: 2rem; font-weight: 500;
+  color: rgba(0,212,255,0.15); line-height: 1;
+}
+.proj-body {}
+.proj-flag {
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em;
+  color: var(--amber); text-transform: uppercase; margin-bottom: 0.4rem;
+}
+.proj-title {
+  font-family: var(--display); font-weight: 700; font-size: 1.2rem;
+  color: var(--white); letter-spacing: -0.02em; margin-bottom: 0.5rem;
+}
+.proj-desc { font-size: 0.88rem; color: var(--slate); line-height: 1.75; max-width: 580px; }
+.proj-meta { margin-top: 1rem; }
+.proj-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.proj-arrow {
+  font-size: 1.4rem; color: rgba(0,212,255,0.25);
+  transition: color 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+.proj-card:hover .proj-arrow { color: var(--electric); transform: translateX(5px); }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; }
+.timeline::before {
+  content: ''; position: absolute; left: 180px; top: 0; bottom: 0;
+  width: 1px; background: rgba(226,232,240,0.06);
+}
+.tl-item {
+  display: grid; grid-template-columns: 180px 1fr;
+  gap: 3rem; padding: 2.5rem 0;
+  border-bottom: 1px solid rgba(226,232,240,0.04);
+  position: relative;
+}
+.tl-item:last-child { border-bottom: none; }
+.tl-item::before {
+  content: ''; position: absolute;
+  left: calc(180px - 4px); top: 2.8rem;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--electric);
+  box-shadow: 0 0 0 3px var(--ink), 0 0 0 5px rgba(0,212,255,0.2);
+}
+.tl-date {
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--slate); padding-top: 0.15rem; letter-spacing: 0.04em;
+  text-align: right; padding-right: 2rem;
+}
+.tl-title {
+  font-family: var(--display); font-weight: 700; font-size: 1.05rem;
+  color: var(--white); margin-bottom: 0.25rem;
+}
+.tl-org {
+  font-family: var(--mono); font-size: 0.7rem;
+  color: var(--electric); letter-spacing: 0.08em; margin-bottom: 0.7rem;
+}
+.tl-desc { font-size: 0.88rem; color: var(--slate); line-height: 1.8; }
+
+/* ── CONTACT ── */
+#contact { text-align: center; }
+.contact-big {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  letter-spacing: -0.05em; color: var(--white);
+  line-height: 1; margin: 1.5rem 0 1rem;
+}
+.contact-big span { color: var(--electric); }
+.contact-sub { color: var(--slate); font-size: 0.97rem; max-width: 420px; margin: 0 auto 3rem; }
+.contact-row { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+.contact-pill {
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--slate);
+  text-decoration: none;
+  padding: 0.7rem 1.5rem;
+  border: 1px solid rgba(226,232,240,0.12);
+  display: flex; align-items: center; gap: 0.5rem;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.contact-pill:hover { border-color: var(--electric); color: var(--electric); background: rgba(0,212,255,0.05); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid rgba(226,232,240,0.05);
+  padding: 2rem 3rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+footer span { font-family: var(--mono); font-size: 0.67rem; color: rgba(148,163,184,0.4); letter-spacing: 0.05em; }
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── MOBILE ── */
+@media (max-width: 900px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  #hero { grid-template-columns: 1fr; padding: 8rem 1.5rem 4rem; }
+  .hero-photo-wrap { order: -1; max-width: 260px; margin: 0 auto; }
+  .photo-badge { display: none; }
+  .section-wrap { padding: 5rem 1.5rem; }
+  .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .skills-bento { grid-template-columns: 1fr; }
+  .skill-tile.wide { grid-column: span 1; }
+  .proj-card { grid-template-columns: 1fr; gap: 1rem; }
+  .proj-num { display: none; }
+  .proj-arrow { display: none; }
+  .timeline::before { left: 0; }
+  .tl-item { grid-template-columns: 1fr; gap: 0.5rem; }
+  .tl-item::before { left: -8px; }
+  .tl-date { text-align: left; padding-right: 0; }
+  footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-name">Lwanga <span>Stefan.</span></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">L<span>S</span>G.</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:stefan@ucu.ac.ug" class="nav-cta">Hire Me</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-content">
+    <div class="hero-status">
+      <span class="status-dot"></span>
+      Available for opportunities · Mukono, Uganda
+    </div>
+
+    <h1 class="hero-name">
+      Lwanga<br>Stefan <span class="accent">Gobero.</span>
+    </h1>
+
+    <p class="hero-role">
+      BSc Mechatronics &amp; Robotics Engineering ·
+      <span class="highlight">Uganda Christian University</span>
+    </p>
+
+    <div class="hero-typewriter-line">
+      &gt;_ <span id="tw"></span><span class="tw-cursor"></span>
+    </div>
+
+    <p class="hero-desc">
+      Year one engineering student blending robotics, automation, and health technology. Currently in Workshop Practice at <strong style="color:var(--light)">Uganda Industrial Research Institute (UIRI)</strong> — building systems that solve real African problems.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#projects" class="btn-electric">View Projects →</a>
+      <a href="#contact" class="btn-ghost">Get In Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-photo-wrap">
+    <div class="hero-photo-frame">
+      <img src="data:image/jpeg;base64,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" alt="Lwanga Stefan Gobero">
+      <div class="photo-badge">Mechatronics Engineer</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<div id="about">
+  <div class="section-wrap full" style="background:var(--ink-mid); padding: 7rem 0;">
+    <div style="max-width:1160px; margin:0 auto; padding: 0 3rem;">
+      <p class="section-eyebrow reveal">Who I Am</p>
+      <h2 class="section-heading reveal">Engineer.<br>Innovator. Builder.</h2>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>
+            I'm <strong>Lwanga Stefan Gobero</strong>, a first-year BSc Mechatronics and Robotics Engineering student at <strong>Uganda Christian University (UCU), Mukono</strong>. I'm currently completing my Workshop Practice programme at the <strong>Uganda Industrial Research Institute (UIRI)</strong>.
+          </p>
+          <p>
+            My engineering passion lives at the intersection of automation, embedded systems, and human-centred design. My flagship venture is <strong>Mama Uhai</strong> — a maternal healthcare mobile application I've pitched at the UICT Innovation Hub in Nakawa, designed to address Uganda's maternal mortality crisis through technology.
+          </p>
+          <p>
+            I'm an active voice in Uganda's growing tech and innovation ecosystem — attending events like <strong>AI Agent Con Mukono</strong> and documenting my journey through Medium and LinkedIn. I believe African engineers must solve African problems.
+          </p>
+          <div class="about-chips">
+            <span class="chip">Robotics</span>
+            <span class="chip">Automation</span>
+            <span class="chip">HealthTech</span>
+            <span class="chip">Embedded Systems</span>
+            <span class="chip">LaTeX</span>
+            <span class="chip">React</span>
+            <span class="chip">Product Design</span>
+            <span class="chip">First Aid</span>
+          </div>
+        </div>
+        <div class="kpi-grid reveal">
+          <div class="kpi">
+            <div class="kpi-val">UCU<span>.</span></div>
+            <div class="kpi-label">Uganda Christian University · Mukono</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-val">Yr<span>1</span></div>
+            <div class="kpi-label">BSc Mechatronics &amp; Robotics Engineering</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-val">UIRI<span>.</span></div>
+            <div class="kpi-label">Workshop Practice · Industrial Research</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-val">3<span>+</span></div>
+            <div class="kpi-label">Technical Workshops &amp; Training Programmes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SKILLS ── -->
+<section id="skills">
+  <div class="section-wrap">
+    <p class="section-eyebrow reveal">Capabilities</p>
+    <h2 class="section-heading reveal">What I Work With</h2>
+    <div class="skills-bento">
+
+      <div class="skill-tile wide reveal">
+        <div class="skill-tile-corner"></div>
+        <div class="skill-tile-icon">🤖</div>
+        <div class="skill-tile-title">Mechatronics & Robotics</div>
+        <div class="skill-tile-desc">Designing and integrating mechanical, electrical, and computing systems. Grounded in AC/DC theory, circuit design, and sensor-actuator feedback loops from hands-on UCU and UIRI training.</div>
+        <div class="skill-tags">
+          <span class="stag">AC/DC Theory</span><span class="stag">Circuit Design</span><span class="stag">Sensors</span><span class="stag">Actuators</span><span class="stag">Automation</span><span class="stag">BS 7671</span>
+        </div>
+      </div>
+
+      <div class="skill-tile reveal">
+        <div class="skill-tile-corner"></div>
+        <div class="skill-tile-icon">📱</div>
+        <div class="skill-tile-title">Mobile & Web Dev</div>
+        <div class="skill-tile-desc">Building full interactive apps — from React prototypes to single-file HTML/SVG tools — with Ugandan UX context built in.</div>
+        <div class="skill-tags">
+          <span class="stag">React</span><span class="stag">HTML/CSS</span><span class="stag">JavaScript</span><span class="stag">SVG</span>
+        </div>
+      </div>
+
+      <div class="skill-tile reveal">
+        <div class="skill-tile-corner"></div>
+        <div class="skill-tile-icon">⚡</div>
+        <div class="skill-tile-title">Electrical Engineering</div>
+        <div class="skill-tile-desc">Domestic wiring, ring final circuits, two-way switching. Safety-first approach informed by UIRI and UCU workshop training.</div>
+        <div class="skill-tags">
+          <span class="stag">Wiring</span><span class="stag">Ring Circuits</span><span class="stag">Safety</span>
+        </div>
+      </div>
+
+      <div class="skill-tile reveal">
+        <div class="skill-tile-corner"></div>
+        <div class="skill-tile-icon">📄</div>
+        <div class="skill-tile-title">Technical Writing</div>
+        <div class="skill-tile-desc">Professional academic reports using LaTeX with TikZ diagrams, pgfplots data charts, and institutional UCU branding.</div>
+        <div class="skill-tags">
+          <span class="stag">LaTeX</span><span class="stag">TikZ</span><span class="stag">pgfplots</span>
+        </div>
+      </div>
+
+      <div class="skill-tile reveal">
+        <div class="skill-tile-corner"></div>
+        <div class="skill-tile-icon">🏥</div>
+        <div class="skill-tile-title">Health & Safety</div>
+        <div class="skill-tile-desc">First Aid, CPR, hazard identification, and risk matrix assessment — trained and certified at UIRI.</div>
+        <div class="skill-tags">
+          <span class="stag">First Aid</span><span class="stag">CPR</span><span class="stag">Risk Assessment</span>
+        </div>
+      </div>
+
+      <div class="skill-tile reveal">
+        <div class="skill-tile-corner"></div>
+        <div class="skill-tile-icon">💡</div>
+        <div class="skill-tile-title">Product Innovation</div>
+        <div class="skill-tile-desc">Design thinking, business model canvas, competitive analysis, and investor pitches — from problem to seed funding ask.</div>
+        <div class="skill-tags">
+          <span class="stag">Design Thinking</span><span class="stag">BMC</span><span class="stag">Pitching</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── PROJECTS ── -->
+<div id="projects">
+  <div class="section-wrap full" style="background:var(--ink-mid); padding: 7rem 0;">
+    <div style="max-width:1160px; margin:0 auto; padding: 0 3rem;">
+      <p class="section-eyebrow reveal">Selected Work</p>
+      <h2 class="section-heading reveal">Projects That Matter</h2>
+      <div class="projects-list">
+
+        <div class="proj-card star reveal">
+          <div class="proj-num">01</div>
+          <div class="proj-body">
+            <div class="proj-flag">★ Flagship · HealthTech</div>
+            <div class="proj-title">Mama Uhai — Maternal Healthcare App</div>
+            <div class="proj-desc">A maternal healthcare mobile application for Uganda addressing the "three delays" of maternal mortality. Features ride booking to facilities, care team selection, in-app provider chat, hospital browsing, UGX pricing, and anonymous complaints. Pitched at the UICT Innovation Hub, Nakawa, with full business model canvas and five-year financial projections.</div>
+            <div class="proj-meta">
+              <div class="proj-tags">
+                <span class="stag">React</span><span class="stag">HTML/CSS</span><span class="stag">UGX Pricing</span><span class="stag">Competitive Analysis</span><span class="stag">Seed Pitch</span><span class="stag">UICT Nakawa</span>
+              </div>
+            </div>
+          </div>
+          <div class="proj-arrow">→</div>
+        </div>
+
+        <div class="proj-card reveal">
+          <div class="proj-num">02</div>
+          <div class="proj-body">
+            <div class="proj-flag">Electrical Engineering</div>
+            <div class="proj-title">Interactive Domestic Wiring Schematic</div>
+            <div class="proj-desc">A full interactive HTML/SVG domestic wiring diagram referencing BS 7671:2018, covering four distinct circuits including two-way switching, ring final circuits, and series-parallel bulb arrangements. Built as a technical educational tool during UCU Workshop Practice.</div>
+            <div class="proj-meta">
+              <div class="proj-tags">
+                <span class="stag">SVG</span><span class="stag">HTML</span><span class="stag">BS 7671:2018</span><span class="stag">UCU · June 2026</span>
+              </div>
+            </div>
+          </div>
+          <div class="proj-arrow">→</div>
+        </div>
+
+        <div class="proj-card reveal">
+          <div class="proj-num">03</div>
+          <div class="proj-body">
+            <div class="proj-flag">Academic Research · SDG 11</div>
+            <div class="proj-title">Uganda Urban Planning Digital Solution</div>
+            <div class="proj-desc">A USSD-based digital solution proposal for sustainable cities in Uganda. Delivered as a LaTeX academic document with TikZ visualisations, pgfplots urbanisation charts, and contextual grounding in Ugandan infrastructure challenges.</div>
+            <div class="proj-meta">
+              <div class="proj-tags">
+                <span class="stag">LaTeX</span><span class="stag">TikZ</span><span class="stag">SDG 11</span><span class="stag">USSD</span><span class="stag">Uganda</span>
+              </div>
+            </div>
+          </div>
+          <div class="proj-arrow">→</div>
+        </div>
+
+        <div class="proj-card reveal">
+          <div class="proj-num">04</div>
+          <div class="proj-body">
+            <div class="proj-flag">Data Visualisation</div>
+            <div class="proj-title">Agricultural Risk &amp; Flood Impact Dashboards</div>
+            <div class="proj-desc">Interactive HTML animated dashboards comparing agricultural risk and flood impact across Uganda regions — communicating complex geospatial data accessibly to non-technical audiences and policy stakeholders.</div>
+            <div class="proj-meta">
+              <div class="proj-tags">
+                <span class="stag">HTML</span><span class="stag">Data Viz</span><span class="stag">Geospatial</span><span class="stag">Uganda</span>
+              </div>
+            </div>
+          </div>
+          <div class="proj-arrow">→</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── EDUCATION ── -->
+<section id="education">
+  <div class="section-wrap">
+    <p class="section-eyebrow reveal">Education & Training</p>
+    <h2 class="section-heading reveal">Where I've Learned</h2>
+    <div class="timeline">
+
+      <div class="tl-item reveal">
+        <div class="tl-date">2026 — Present</div>
+        <div>
+          <div class="tl-title">BSc Mechatronics & Robotics Engineering (Year 1)</div>
+          <div class="tl-org">Uganda Christian University · Mukono</div>
+          <div class="tl-desc">Studying the integration of mechanical, electrical, and computing systems with a focus on automation, embedded systems, and robotics. Trinity 2026 Workshop Practice programme cohort.</div>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-date">2026 · Ongoing</div>
+        <div>
+          <div class="tl-title">Workshop Practice Programme</div>
+          <div class="tl-org">Uganda Industrial Research Institute (UIRI) · Nakawa</div>
+          <div class="tl-desc">Current industrial training at UIRI covering manufacturing processes, laboratory techniques, safety systems, and applied engineering — bridging academic theory with real industry practice.</div>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-date">1–5 June 2026</div>
+        <div>
+          <div class="tl-title">Electrical Engineering Workshop</div>
+          <div class="tl-org">Uganda Christian University · Mukono</div>
+          <div class="tl-desc">Hands-on week covering AC/DC theory, domestic wiring configurations, and electrical safety. Produced a comprehensive UCU-branded LaTeX report and delivered a Mama Uhai innovation pitch at UICT.</div>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-date">25–29 May 2026</div>
+        <div>
+          <div class="tl-title">Health, Safety & First Aid Training</div>
+          <div class="tl-org">Uganda Industrial Research Institute (UIRI)</div>
+          <div class="tl-desc">Intensive programme covering occupational hazard categories, risk assessment frameworks, CPR, and first aid procedures — with TikZ-rendered risk matrices and a full LaTeX report.</div>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-date">11–15 May 2026</div>
+        <div>
+          <div class="tl-title">Design Thinking & Entrepreneurship Programme</div>
+          <div class="tl-org">Uganda Christian University · Mukono</div>
+          <div class="tl-desc">Full week programme for Mama Uhai: problem definition, fieldwork, prototyping, app and database design, and a formal investor pitch with business model canvas and seed funding ask.</div>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-date">2026</div>
+        <div>
+          <div class="tl-title">AI Agent Con Mukono</div>
+          <div class="tl-org">UCU Ankrah Auditorium · Mukono</div>
+          <div class="tl-desc">Attended Uganda's premier AI innovation event featuring local tech leaders. Covered sessions on Model Context Protocol and AI ethics — published as a first-person blog post on Medium.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="section-wrap" style="text-align:center;">
+    <p class="section-eyebrow reveal" style="justify-content:center;">Let's Connect</p>
+    <div class="contact-big reveal">Let's Build<br><span>Something</span> Real.</div>
+    <p class="contact-sub reveal">Open to collaborations, opportunities, and conversations about engineering and tech in East Africa.</p>
+    <div class="contact-row reveal">
+      <a href="https://linkedin.com" class="contact-pill" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://medium.com" class="contact-pill" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
+        Medium Blog
+      </a>
+      <a href="mailto:stefan@ucu.ac.ug" class="contact-pill">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Email Me
+      </a>
+      <a href="https://ucu.ac.ug" class="contact-pill" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 1 0 20 14.5 14.5 0 0 1 0-20"/><path d="M2 12h20"/></svg>
+        UCU Profile
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Lwanga Stefan Gobero · Mukono, Uganda</span>
+  <span>BSc Mechatronics & Robotics · Uganda Christian University</span>
+</footer>
+
+<script>
+// ── LOADER ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hidden');
+  }, 1600);
+});
+
+// ── CUSTOM CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(2.5)'; ring.style.transform = 'translate(-50%,-50%) scale(1.5)'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.transform = 'translate(-50%,-50%) scale(1)'; });
+});
+
+// ── TYPEWRITER ──
+const phrases = ['Mechatronics Engineer', 'Robotics Enthusiast', 'HealthTech Builder', 'Problem Solver', 'Maker at UIRI'];
+let pi = 0, ci = 0, del = false;
+const twEl = document.getElementById('tw');
+function type() {
+  const w = phrases[pi];
+  twEl.textContent = del ? w.slice(0, --ci) : w.slice(0, ++ci);
+  if (!del && ci === w.length) { del = true; setTimeout(type, 1800); return; }
+  if (del && ci === 0) { del = false; pi = (pi + 1) % phrases.length; }
+  setTimeout(type, del ? 55 : 85);
+}
+setTimeout(type, 2200);
+
+// ── SCROLL REVEAL ──
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+// ── NAV HIGHLIGHT ──
+const secs = document.querySelectorAll('section[id], div[id]');
+const navAs = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secs.forEach(s => { if (window.scrollY >= s.offsetTop - 220) cur = s.id; });
+  navAs.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--electric)' : '';
+  });
+});
+</script>
+</body>
+</html>
